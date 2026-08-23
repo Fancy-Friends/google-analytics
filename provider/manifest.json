@@ -1,0 +1,70 @@
+{
+  "$comment": "THE hand-written part. Four packages -- ui, js, php, py -- are generated from this directory and are never edited. Every fact here is read from Google's own discovery document (https://analyticsdata.googleapis.com/$discovery/rest?version=v1beta), not from docs prose.",
+
+  "connectorApi": 1,
+
+  "service": "google_analytics",
+  "title": "Google Analytics",
+  "domain": "analytics",
+  "docs": "https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport",
+
+  "auth": "oauth2",
+  "requires": ["accessToken", "refreshToken", "clientId", "clientSecret"],
+  "authorize": {
+    "kind": "bearer",
+    "credential": "accessToken"
+  },
+
+  "oauth": {
+    "flow": "authorization_code",
+    "authorizeUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "tokenUrl": "https://oauth2.googleapis.com/token",
+    "scopes": ["https://www.googleapis.com/auth/analytics.readonly"],
+    "accessTokenCredential": "accessToken",
+    "refreshTokenCredential": "refreshToken",
+    "accessTokenTtlSeconds": 3600,
+    "$scopeComment": "analytics.readonly, not analytics. The discovery document lists both for runReport and this action only READS -- granting write access to run a report would let an automation modify property configuration it never needs to touch.",
+    "$comment": "The package DECLARES the dance and does not perform it. Google's access tokens last ONE HOUR, so refreshToken is required rather than optional."
+  },
+
+  "sandbox": "none",
+  "$sandboxComment": "CHECKED. Analytics has no test estate -- there is one API and a property is a real property. This action only reads, so the blast radius is a quota charge rather than a change, but it is still real data.",
+  "sandboxNote": "Google Analytics has no sandbox. A report reads a real property's real data and spends real quota. The faker returns a plausibly-shaped report so a flow can be built without a Google account.",
+
+  "baseUrls": {
+    "live": "https://analyticsdata.googleapis.com"
+  },
+
+  "encoding": "json",
+
+  "credentialFields": [
+    {
+      "key": "clientId",
+      "label": "OAuth client ID",
+      "scope": "provider",
+      "secret": false,
+      "help": "From Google Cloud Console -> APIs & Services -> Credentials. ONE value for the whole installation, not per connected account."
+    },
+    {
+      "key": "clientSecret",
+      "label": "OAuth client secret",
+      "scope": "provider",
+      "secret": true,
+      "help": "The client secret for the same OAuth app. One value for the whole installation."
+    },
+    {
+      "key": "accessToken",
+      "label": "Access token",
+      "scope": "account",
+      "secret": true,
+      "help": "Per connected Google account, and it expires after ONE HOUR. The host refreshes it with the refresh token."
+    },
+    {
+      "key": "refreshToken",
+      "label": "Refresh token",
+      "scope": "account",
+      "secret": true,
+      "help": "Per connected Google account. Google issues one only when the consent request asks for offline access."
+    }
+  ]
+}

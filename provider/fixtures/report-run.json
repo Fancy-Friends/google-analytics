@@ -1,0 +1,19 @@
+{
+  "$comment": "RunReportResponse, read from Google's discovery document: rows, rowCount, metricHeaders, dimensionHeaders, kind. Reproduced rather than flattened -- an author who wires {{ $json.data.rows[0].metricValues[0].value }} against the fake must find the same path when a real report arrives.",
+  "operation": "report_run",
+
+  "response": {
+    "dimensionHeaders": [{ "name": "date" }],
+    "metricHeaders": [
+      { "name": "activeUsers", "type": "TYPE_INTEGER" },
+      { "name": "sessions", "type": "TYPE_INTEGER" }
+    ],
+    "rows": [
+      { "dimensionValues": [{ "value": "20260821" }], "metricValues": [{ "value": "412" }, { "value": "530" }] },
+      { "dimensionValues": [{ "value": "20260822" }], "metricValues": [{ "value": "389" }, { "value": "501" }] }
+    ],
+    "rowCount": 2,
+    "kind": "analyticsData#runReport",
+    "$valueComment": "Metric values are STRINGS, even for integers -- Google sends \"412\", not 412. A faker that emitted numbers would let an author write arithmetic that works against the fake and concatenates against the real thing."
+  }
+}

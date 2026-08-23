@@ -1,0 +1,93 @@
+{
+  "$comment": "Read from Google's own discovery document: properties.runReport -> POST v1beta/{+property}:runReport, request RunReportRequest, response RunReportResponse.",
+  "operation": "report_run",
+  "kind": "report",
+  "title": "Google Analytics report",
+  "description": "Run a report against a Google Analytics 4 property.",
+  "summary": "run a report",
+  "docs": "https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport",
+  "sideEffects": "none",
+  "$sideEffectsComment": "`none`, and the only read-only action in the estate so far. Running the same report twice returns the same numbers and changes nothing, so a durable run may replay it freely -- which is why there is no idempotency question here at all.",
+
+  "request": {
+    "method": "POST",
+    "path": "/v1beta/{+property}:runReport",
+    "encoding": "json",
+    "$pathComment": "{+property}, with a PLUS. RFC 6570 reserved expansion: the value is `properties/1234` and the SLASH MUST SURVIVE. Percent-encoded it becomes properties%2F1234 and Google answers 404. This is the exact opposite of Google Sheets, where a sheet named `Q1/Q2` must have its slash escaped or the request reaches a different document -- the two are one character apart in the template and both fail silently when confused."
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "property",
+      "label": "Property",
+      "required": true,
+      "default": "properties/",
+      "description": "The GA4 property, written as `properties/1234567890`. The numeric id alone is not accepted.",
+      "send": { "in": "path", "as": "property", "value": "string" },
+      "$comment": "The discovery document pins the shape itself: pattern ^properties/[^/]+$. So the prefix is part of the value rather than something to add here, and the default carries it to make that obvious in the UI."
+    },
+    {
+      "type": "text",
+      "key": "startDate",
+      "label": "Start date",
+      "required": true,
+      "default": "28daysAgo",
+      "description": "YYYY-MM-DD, or a relative form Google accepts such as `28daysAgo`, `yesterday` or `today`.",
+      "send": { "in": "body", "as": "dateRanges.0.startDate", "value": "string" }
+    },
+    {
+      "type": "text",
+      "key": "endDate",
+      "label": "End date",
+      "required": true,
+      "default": "today",
+      "description": "YYYY-MM-DD, or a relative form such as `today`.",
+      "send": { "in": "body", "as": "dateRanges.0.endDate", "value": "string" },
+      "$comment": "dateRanges is an ARRAY of DateRange, and this connector offers exactly one range. The dotted `as` nests it -- `dateRanges.0.startDate` folds into {dateRanges: {0: ...}}, which is why the fixture and the parity suite are what prove the shape Google actually receives."
+    },
+    {
+      "type": "text",
+      "key": "metrics",
+      "label": "Metrics",
+      "required": true,
+      "default": "activeUsers,sessions",
+      "description": "Metric names, comma separated. For example activeUsers, sessions, screenPageViews.",
+      "send": {
+        "in": "body",
+        "as": "metrics",
+        "value": "list",
+        "separator": ",",
+        "encoding": "objects",
+        "itemKey": "name",
+        "$comment": "Google asks for [{\"name\": \"activeUsers\"}], not [\"activeUsers\"]. A bare list of strings is refused as the wrong type, which is why `objects` exists and why the key is declared rather than guessed."
+      }
+    },
+    {
+      "type": "text",
+      "key": "dimensions",
+      "label": "Dimensions",
+      "default": "date",
+      "description": "Dimension names, comma separated. For example date, country, pagePath. Leave empty for a single total row.",
+      "send": {
+        "in": "body",
+        "as": "dimensions",
+        "value": "list",
+        "separator": ",",
+        "encoding": "objects",
+        "itemKey": "name"
+      }
+    }
+  ],
+
+  "outputShape": [
+    { "path": "data.rows", "type": "array", "description": "One entry per combination of dimension values. Each carries dimensionValues and metricValues, in the order requested." },
+    { "path": "data.rowCount", "type": "number", "description": "Total rows matching the query, which can exceed the rows returned." },
+    { "path": "data.metricHeaders", "type": "array", "description": "The metrics in the order their values appear in each row -- the only thing that says which number is which." }
+  ],
+
+  "contract": {
+    "sends": ["property", "dateRanges", "metrics", "dimensions"],
+    "reads": ["rows", "rowCount", "metricHeaders"]
+  }
+}
