@@ -40,9 +40,14 @@ final class ReportRun
      * later as an "invalid request" from Google Analytics.
      *
      * @param array<string,mixed> $config
-     * @return array<string,scalar>
+     * An EMPTY body is `{}`, not `[]` — and PHP cannot tell those apart, because
+     * both are `array()` and `json_encode` picks the list. So an empty one is
+     * returned as an object. TypeScript and Python have no such ambiguity, which
+     * is why this is a difference only the byte-parity suite can see.
+     *
+     * @return array<string,mixed>|\stdClass
      */
-    public static function body(array $config): array
+    public static function body(array $config): array|\stdClass
     {
         if (($config['property'] ?? null) === null || ($config['property'] ?? null) === '') {
             throw new ConnectorConfigException('report_run: "property" is required (Property).');
@@ -76,7 +81,9 @@ final class ReportRun
             $body['dimensions'] = array_map(static fn ($item) => ['name' => $item], self::dimensionsList($config['dimensions'] ?? null));
         }
 
-        return self::nestFields($body);
+        $body = self::nestFields($body);
+        $body = $body === [] ? new \stdClass() : $body;
+        return $body;
     }
 
     /**
