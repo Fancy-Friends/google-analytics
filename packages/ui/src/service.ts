@@ -86,6 +86,11 @@ export const GOOGLE_ANALYTICS_CREDENTIALS = [
  * The access token lasts 3600 seconds. A host that never refreshes will work
  * all afternoon and be broken by morning, which is why the lifetime is stated
  * rather than left to be discovered.
+ *
+ * Its refresh tokens do NOT rotate: the same one is reusable, so a refresh may
+ * safely be retried and may run concurrently. That is stated rather than
+ * assumed because the opposite — a provider that spends the token and revokes
+ * the grant on a replay — looks identical until it happens.
  */
 export const GOOGLE_ANALYTICS_OAUTH = {
   "flow": "authorization_code",
@@ -96,6 +101,7 @@ export const GOOGLE_ANALYTICS_OAUTH = {
   ],
   "accessTokenCredential": "accessToken",
   "refreshTokenCredential": "refreshToken",
+  "refreshTokenRotates": false,
   "accessTokenTtlSeconds": 3600
 } as const;
 

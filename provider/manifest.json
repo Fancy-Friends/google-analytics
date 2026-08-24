@@ -22,6 +22,8 @@
     "scopes": ["https://www.googleapis.com/auth/analytics.readonly"],
     "accessTokenCredential": "accessToken",
     "refreshTokenCredential": "refreshToken",
+    "$refreshTokenRotates": "Reusable. A refresh response carries access_token, expires_in, scope and token_type — no refresh_token — and Google’s own expiry rule is \"the refresh token has not been used for six months\", which is a statement about a token that is PERSISTED AND REPLAYED. Under rotation it would change hourly and that rule could never fire.",
+    "refreshTokenRotates": false,
     "accessTokenTtlSeconds": 3600,
     "$scopeComment": "analytics.readonly, not analytics. The discovery document lists both for runReport and this action only READS -- granting write access to run a report would let an automation modify property configuration it never needs to touch.",
     "$comment": "The package DECLARES the dance and does not perform it. Google's access tokens last ONE HOUR, so refreshToken is required rather than optional."
