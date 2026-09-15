@@ -49,7 +49,7 @@ final class GoogleAnalyticsFaker
     }
 
     /** @param array<string,mixed> $config */
-    private static function ReportRun(array $config, mixed $fake): array
+    private static function ReportRun(array $config, mixed $fake): array|\stdClass
     {
         return [
         'dimensionHeaders' => [
