@@ -8,7 +8,7 @@
     ".github/workflows/ci.yml": "110a344d411f034fa2122c056d1c0b8116e7598bba1e6717d0a97cc1a25beff9",
     ".github/workflows/codeql.yml": "f71c5e6d3787ce0088330107ef17b71f890b0ed807f0b61b8a0363813b9bc157",
     ".github/workflows/publish.yml": "9bfc0e7533920259c1b4412e6f173248e37cfd6bccbd073fbcc994c8fd9cd455",
-    ".github/workflows/verify-published.yml": "1fb8f851190ef6990fef8ee822479f47278020530abf9471886a025f4de6c519",
+    ".github/workflows/verify-published.yml": "5e0ccb2e6242d951bf56b139672bdb769a19c675b1d89334a713ab87fef483c3",
     ".gitignore": "47a7633c70c1d1e6b3c17a782a105355accfb3495d6402f7f308256bf505e1ad",
     "AGENTS.md": "3f5db587c9dc31696dac27bb669da98fcaf3ee01818c440ec01c46b299d2f512",
     "CHANGELOG.md": "2c4649e0a91e2a33842614747ca377292fce75922d53b0b3c4e0c186ea3b2348",
