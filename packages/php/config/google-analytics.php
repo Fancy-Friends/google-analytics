@@ -20,12 +20,12 @@ return [
 
     'credentials' => [
         // OAuth client ID (one per installation).
-        'clientId' => env('GOOGLE_ANALYTICS_CLIENTID'),
+        'clientId' => env('GOOGLE_ANALYTICS_CLIENT_ID', env('GOOGLE_ANALYTICS_CLIENTID')),
         // OAuth client secret (one per installation, secret).
-        'clientSecret' => env('GOOGLE_ANALYTICS_CLIENTSECRET'),
+        'clientSecret' => env('GOOGLE_ANALYTICS_CLIENT_SECRET', env('GOOGLE_ANALYTICS_CLIENTSECRET')),
         // Access token (per connected account, secret).
-        'accessToken' => env('GOOGLE_ANALYTICS_ACCESSTOKEN'),
+        'accessToken' => env('GOOGLE_ANALYTICS_ACCESS_TOKEN', env('GOOGLE_ANALYTICS_ACCESSTOKEN')),
         // Refresh token (per connected account, secret).
-        'refreshToken' => env('GOOGLE_ANALYTICS_REFRESHTOKEN'),
+        'refreshToken' => env('GOOGLE_ANALYTICS_REFRESH_TOKEN', env('GOOGLE_ANALYTICS_REFRESHTOKEN')),
     ],
 ];
